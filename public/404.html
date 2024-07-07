@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Page Not Found</title>
+    <script type="text/javascript">
+      //redirects all 404 requests to the index.html page
+      (function () {
+        var redirect = "/quick-bite" + location.pathname;
+        window.location.href = redirect;
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
