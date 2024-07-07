@@ -4,12 +4,23 @@
     <meta charset="UTF-8" />
     <title>Page Not Found</title>
     <script type="text/javascript">
-      // Redirect to the index.html while preserving the path
-      var pathname = window.location.pathname;
-      var newPath = pathname.endsWith("/") ? pathname : pathname + "/";
-      var url =
-        window.location.protocol + "//" + window.location.host + newPath;
-      window.location.replace(url);
+      // Check if the path does not include 'index.html'
+      if (!window.location.pathname.includes("index.html")) {
+        // Redirect to the index.html while preserving the path
+        var pathname = window.location.pathname;
+        var search = window.location.search || "";
+        var hash = window.location.hash || "";
+        var newPath = pathname.endsWith("/") ? pathname : pathname + "/";
+        var url =
+          window.location.protocol +
+          "//" +
+          window.location.host +
+          newPath +
+          "index.html" +
+          search +
+          hash;
+        window.location.replace(url);
+      }
     </script>
   </head>
   <body></body>
