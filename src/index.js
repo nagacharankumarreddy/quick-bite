@@ -8,7 +8,7 @@ import { FirebaseProvider } from "./firebase";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/quick-bite">
     <FirebaseProvider>
       <App />
     </FirebaseProvider>
