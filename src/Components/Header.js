@@ -7,13 +7,14 @@ function Header() {
   const { currentUser, signOutUser } = useFirebase();
 
   return (
-    <div className="flex justify-between items-center m-4 bg-slate-700 p-4 rounded-lg shadow-lg">
-      <div className="flex items-center">
-        <img src={logo} alt="logo" className="h-12" />
-      </div>
-      <div className="w-1/2 flex justify-end">
+    <div className="bg-slate-700 shadow-lg">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="flex items-center">
+          <img src={logo} alt="logo" className="h-12" />
+        </div>
+
         <nav>
-          <ul className="flex text-white text-md font-medium items-center space-x-4">
+          <ul className="flex text-white text-md font-medium items-center space-x-6">
             <li>
               <Link
                 to="/"
@@ -38,9 +39,9 @@ function Header() {
                 Contact Us
               </Link>
             </li>
-            {currentUser && (
+            {currentUser ? (
               <>
-                <li className="ml-4 flex items-center">
+                <li className="flex items-center space-x-2">
                   {currentUser.photoURL && (
                     <img
                       src={currentUser.photoURL}
@@ -48,19 +49,18 @@ function Header() {
                       className="h-10 rounded-full"
                     />
                   )}
-                  <span className="text-white ml-2">
-                    {currentUser.displayName}
-                  </span>
+                  <span className="text-white">{currentUser.displayName}</span>
+                </li>
+                <li>
                   <button
                     onClick={() => signOutUser()}
-                    className="ml-4 text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+                    className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
                   >
                     Sign Out
                   </button>
                 </li>
               </>
-            )}
-            {!currentUser && (
+            ) : (
               <>
                 <li>
                   <Link
@@ -75,7 +75,7 @@ function Header() {
                     to="/signup"
                     className="hover:text-yellow-400 transition-colors duration-200"
                   >
-                    SignUp
+                    Sign Up
                   </Link>
                 </li>
               </>
