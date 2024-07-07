@@ -8,21 +8,15 @@ function Home() {
 
   useEffect(() => {
     const fetchRestaurants = async () => {
-      try {
-        const fetchedRestaurants = await getData("restaurants");
-        setRestaurants(fetchedRestaurants);
-        console.log(fetchedRestaurants); // Ensure data is fetched correctly
-      } catch (error) {
-        console.error("Error fetching restaurants:", error);
-      }
+      const restaurantsData = await getData("restaurants");
+      setRestaurants(restaurantsData);
     };
 
     fetchRestaurants();
-    return () => {};
-  }, [getData]);
+  }, []);
 
   return (
-    <div className="bg-red-50 border-red-100">
+    <div className="bg-red-50 p-4">
       <div className="flex flex-wrap justify-center">
         {Object.keys(restaurants).map((restaurantId) => (
           <RestaurantCard
