@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/quick-bite/static/css/main.949311ac.css",
+    "main.js": "/quick-bite/static/js/main.0d267408.js",
+    "static/js/453.02c26685.chunk.js": "/quick-bite/static/js/453.02c26685.chunk.js",
+    "static/media/quickbite.png": "/quick-bite/static/media/quickbite.d8934cdb380c0f18fd04.png",
+    "index.html": "/quick-bite/index.html",
+    "main.949311ac.css.map": "/quick-bite/static/css/main.949311ac.css.map",
+    "main.0d267408.js.map": "/quick-bite/static/js/main.0d267408.js.map",
+    "453.02c26685.chunk.js.map": "/quick-bite/static/js/453.02c26685.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.949311ac.css",
+    "static/js/main.0d267408.js"
+  ]
+}
