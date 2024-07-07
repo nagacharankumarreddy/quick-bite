@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>Page Not Found</title>
-    <meta http-equiv="refresh" content="0; url=./index.html" />
+    <script type="text/javascript">
+      // Redirect to the index.html while preserving the path
+      var pathname = window.location.pathname;
+      var newPath = pathname.endsWith("/") ? pathname : pathname + "/";
+      var url =
+        window.location.protocol + "//" + window.location.host + newPath;
+      window.location.replace(url);
+    </script>
   </head>
   <body></body>
 </html>
