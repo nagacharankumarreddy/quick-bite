@@ -5,7 +5,10 @@
     <title>Page Not Found</title>
     <script type="text/javascript">
       (function () {
-        window.location.replace("/");
+        var pathname = window.location.pathname;
+        var search = window.location.search || "";
+        var hash = window.location.hash || "";
+        window.location.replace("/quick-bite" + pathname + search + hash);
       })();
     </script>
   </head>
