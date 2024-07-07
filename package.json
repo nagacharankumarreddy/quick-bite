@@ -1,6 +1,7 @@
 {
-  "name": "QuickBite",
+  "name": "quickbite",
   "version": "0.1.0",
+  "homepage": "https://nagacharankumarreddy.github.io/quick-bite",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
