@@ -8,12 +8,13 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import { get, getDatabase, ref } from "firebase/database";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const FirebaseContext = createContext(null);
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyD_V2Roidf3ZOwOtCObp6AODT8praMY-wQ",
   authDomain: "quick-bite-a926c.firebaseapp.com",
   projectId: "quick-bite-a926c",
@@ -25,6 +26,7 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
+const db = getDatabase(firebaseApp);
 
 export const useFirebase = () => useContext(FirebaseContext);
 
@@ -85,6 +87,23 @@ export const FirebaseProvider = (props) => {
     }
   };
 
+  const getData = async (url) => {
+    try {
+      // Access and log  restaurants
+      const snapshot = await get(ref(db, `${url}`));
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error(
+        "Error accessing data from Realtime Database:",
+        error.message
+      );
+    }
+  };
+
   return (
     <FirebaseContext.Provider
       value={{
@@ -96,6 +115,7 @@ export const FirebaseProvider = (props) => {
         logOut,
         signInWithGoogle,
         signOutUser,
+        getData,
       }}
     >
       {props.children}
