@@ -68,7 +68,7 @@ const RestaurantMenu = () => {
               <p className="text-gray-600">Category: {item.category}</p>
               <div className="flex items-center mt-4">
                 <button
-                  onClick={() => handleDecreaseQuantity(item.id)}
+                  onClick={() => handleDecreaseQuantity(item)}
                   className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
                 >
                   -

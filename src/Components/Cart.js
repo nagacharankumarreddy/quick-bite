@@ -12,12 +12,12 @@ const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  const handleIncreaseQuantity = (item) => {
-    dispatch(increaseQuantity(item));
+  const handleIncreaseQuantity = (itemId) => {
+    dispatch(increaseQuantity(itemId));
   };
 
-  const handleDecreaseQuantity = (item) => {
-    dispatch(decreaseQuantity(item));
+  const handleDecreaseQuantity = (itemId) => {
+    dispatch(decreaseQuantity(itemId));
   };
 
   const handleRemoveFromCart = (itemId) => {
