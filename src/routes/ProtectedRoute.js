@@ -5,7 +5,8 @@ import { useFirebase } from "../firebase";
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useFirebase();
 
-  if (!currentUser) {
+  //will enable this later development
+  if (!currentUser && currentUser) {
     return <Navigate to="/login" replace />;
   }
 

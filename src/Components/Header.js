@@ -59,6 +59,14 @@ function Header() {
                     Sign Out
                   </button>
                 </li>
+                <li>
+                  <Link
+                    to="/cart"
+                    className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+                  >
+                    Cart
+                  </Link>
+                </li>
               </>
             ) : (
               <>

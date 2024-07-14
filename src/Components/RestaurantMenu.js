@@ -4,14 +4,40 @@ import { useGetRestaurantMenuQuery } from "../api/restaurantApi";
 import { IMAGE_BASE_URL } from "../Utils/constants";
 import Loader from "../Utils/Loader";
 import dummyImage from "../Images/noImage.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+} from "../features/cart/cartSlice";
 
 const RestaurantMenu = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+
   const {
     data: menuItems = { itemCards: [] },
     error,
     isLoading,
   } = useGetRestaurantMenuQuery({ id });
+
+  const handleAddToCart = (item) => {
+    dispatch(addToCart(item));
+  };
+
+  const handleIncreaseQuantity = (itemId) => {
+    dispatch(increaseQuantity(itemId));
+  };
+
+  const handleDecreaseQuantity = (itemId) => {
+    dispatch(decreaseQuantity(itemId));
+  };
+
+  const getItemQuantity = (itemId) => {
+    const cartItem = cartItems.find((item) => item.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
+  };
 
   if (isLoading) return <Loader />;
   if (error) return <div>Error loading menu: {error.message}</div>;
@@ -40,6 +66,27 @@ const RestaurantMenu = () => {
               <p className="text-gray-600">{item.description}</p>
               <p className="text-gray-600">Price: {item.price}</p>
               <p className="text-gray-600">Category: {item.category}</p>
+              <div className="flex items-center mt-4">
+                <button
+                  onClick={() => handleDecreaseQuantity(item.id)}
+                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
+                >
+                  -
+                </button>
+                <span className="px-4">{getItemQuantity(item.id)}</span>
+                <button
+                  onClick={() => handleIncreaseQuantity(item)}
+                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-r"
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </div>
         ))}
