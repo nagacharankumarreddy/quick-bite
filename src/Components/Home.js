@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from "react";
-import useFirebase from "../firebase";
-import RestaurantCard from "./RestaurantCard";
+import { useGetRestaurantsQuery } from "../api/restaurantApi";
+import RestaurantCard from "../Components/RestaurantCard";
+import Loader from "../Utils/Loader";
 
 function Home() {
-  const { getData } = useFirebase();
-  const [restaurants, setRestaurants] = useState([]);
+  const { data, error, isLoading } = useGetRestaurantsQuery();
 
-  useEffect(() => {
-    const fetchRestaurants = async () => {
-      const restaurantsData = await getData("restaurants");
-      setRestaurants(restaurantsData);
-    };
+  if (isLoading) {
+    return <Loader />;
+  }
 
-    fetchRestaurants();
-  }, []);
+  if (error) {
+    return <div className="text-red-500 p-4">Error: {error.message}</div>;
+  }
 
   return (
     <div className="bg-red-50 p-4">
-      <div className="flex flex-wrap justify-center">
-        {Object.keys(restaurants).map((restaurantId) => (
+      <div className="flex flex-wrap justify-center gap-4">
+        {data.map((restaurant) => (
           <RestaurantCard
-            key={restaurantId}
-            data={restaurants[restaurantId]}
+            key={restaurant.id}
+            data={restaurant}
             className="flex justify-between flex-wrap"
           />
         ))}
