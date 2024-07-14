@@ -40,7 +40,7 @@ export const FirebaseProvider = (props) => {
       setCurrentUser(user);
     });
     return () => unsubscribe();
-  }, [firebaseAuth]);
+  }, []);
 
   const signUpUserWithEmailAndPassword = async (email, password) => {
     try {

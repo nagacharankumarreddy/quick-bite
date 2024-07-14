@@ -33,7 +33,7 @@ export const restaurantApi = createApi({
                 description: item.description || "",
                 imageId: item.imageId,
                 isVeg: item.isVeg,
-                price: item.price,
+                price: item.defaultPrice / 100,
                 ratings: item.ratings || 0,
               }))
             : [];

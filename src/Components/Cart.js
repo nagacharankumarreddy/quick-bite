@@ -23,16 +23,34 @@ const Cart = () => {
   const handleRemoveFromCart = (itemId) => {
     dispatch(removeFromCart(itemId));
   };
+
   const getItemQuantity = (itemId) => {
-    console.log("Naga getItem", itemId);
-    console.log("Naga cartItems", cartItems);
     const cartItem = cartItems.find((item) => item.id === itemId);
     return cartItem ? cartItem.quantity : 0;
   };
 
+  const calculateTotalPrice = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
+  const getItemTotalPrice = (item) => {
+    return (item.price * getItemQuantity(item.id)).toFixed(2);
+  };
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="container mx-auto text-center">
+        <h2 className="text-2xl font-bold mb-4">Cart</h2>
+        <p className="text-gray-600">Your cart is empty.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Cart</h2>
       <div className="flex flex-wrap justify-center">
         {cartItems.map((item) => (
           <div
@@ -53,7 +71,7 @@ const Cart = () => {
             </div>
             <div className="p-4">
               <p className="text-gray-900 font-bold text-xl">{item.name}</p>
-              <p className="text-gray-600">Price: {item.price}</p>
+              <p className="text-gray-600">Price: ${item.price}</p>
               <p className="text-gray-600">Category: {item.category}</p>
               <div className="flex items-center mt-4">
                 <button
@@ -76,9 +94,29 @@ const Cart = () => {
                   Remove
                 </button>
               </div>
+              <p className="text-gray-600 mt-2">
+                Total: {item.quantity} x ${item.price} = $
+                {getItemTotalPrice(item)}
+              </p>
             </div>
           </div>
         ))}
+      </div>
+      <div className=" text-center">
+        <h3 className="text-gray-900 font-bold text-xl">Bill Summary:</h3>
+        <ul className="text-gray-600">
+          {cartItems.map((item) => (
+            <li key={item.id}>
+              {item.quantity} x ${item.price} = ${getItemTotalPrice(item)}
+            </li>
+          ))}
+        </ul>
+        <p className="text-gray-900 font-bold text-xl mt-4">
+          Grand Total: ${calculateTotalPrice().toFixed(2)}
+        </p>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
+          Checkout
+        </button>
       </div>
     </div>
   );
