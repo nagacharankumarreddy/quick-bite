@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const { currentUser } = useFirebase();
 
   //will enable this later development
-  if (!currentUser && currentUser) {
+  if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
