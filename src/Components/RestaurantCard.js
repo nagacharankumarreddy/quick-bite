@@ -1,10 +1,20 @@
 import React from "react";
 import GenerateStars from "./GenerateStars";
 import { IMAGE_BASE_URL } from "../Utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const RestaurantCard = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/restaurant/${data.id}`);
+  };
+
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden m-2 md:w-1/2 lg:w-1/3 xl:w-1/4">
+    <div
+      className="bg-white shadow-lg rounded-lg overflow-hidden m-2 md:w-1/2 lg:w-1/3 xl:w-1/4 cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="relative h-40 sm:h-48">
         <img
           src={`${IMAGE_BASE_URL}/${data.cloudinaryImageId}`}

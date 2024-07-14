@@ -5,8 +5,8 @@ import Login from "../Components/Login";
 import SignUp from "../Components/SignUp";
 import ForgotPassword from "../Components/ForgotPassword";
 import Cart from "../Components/Cart";
+import RestaurantMenu from "../Components/RestaurantMenu";
 
-// routes.js
 const routes = [
   {
     path: "/",
@@ -37,7 +37,12 @@ const routes = [
   {
     path: "/cart",
     element: <Cart />,
-    protected: true, // Mark the Cart route as protected
+    protected: true,
+  },
+  {
+    path: "/restaurant/:id",
+    element: <RestaurantMenu />,
+    protected: true,
   },
 ];
 
