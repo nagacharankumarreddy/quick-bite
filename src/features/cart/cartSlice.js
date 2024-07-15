@@ -8,7 +8,6 @@ const saveToLocalStorage = (state) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem("cart", serializedState);
-    console.log("Saved state to localStorage:", serializedState);
   } catch (e) {
     console.error("Could not save state", e);
   }
@@ -37,23 +36,19 @@ export const cartSlice = createSlice({
       } else {
         state.items.push({ ...newItem, quantity: 1 });
       }
-      console.log("Added to cart:", newItem);
       saveToLocalStorage(state);
     },
     clearCart: (state) => {
       state.items = [];
-      console.log("Cleared cart");
       saveToLocalStorage(state);
     },
     increaseQuantity: (state, action) => {
       const item = action.payload;
-      console.log("Increasing quantity:item ", item);
       const itemToUpdate = state.items.find(
         (stateItem) => item.id === stateItem.id
       );
       if (itemToUpdate) {
         itemToUpdate.quantity++;
-        console.log("Increased quantity for item:", itemToUpdate);
       } else {
         state.items.push({ ...item, quantity: 1 });
       }
@@ -66,20 +61,23 @@ export const cartSlice = createSlice({
       );
       if (itemToUpdate && itemToUpdate.quantity > 1) {
         itemToUpdate.quantity--;
-        console.log("Decreased quantity for item:", item.id);
         saveToLocalStorage(state);
       }
     },
     removeFromCart: (state, action) => {
       const itemId = action.payload;
       state.items = state.items.filter((item) => item.id !== itemId);
-      console.log("Removed from cart:", itemId);
       saveToLocalStorage(state);
     },
   },
 });
 
-export const { addToCart, increaseQuantity, decreaseQuantity, removeFromCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+  removeFromCart,
+  clearCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

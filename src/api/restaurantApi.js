@@ -32,7 +32,6 @@ export const restaurantApi = createApi({
                 category: item.category,
                 description: item.description || "",
                 imageId: item.imageId,
-                isVeg: item.isVeg,
                 price: item.defaultPrice / 100,
                 ratings: item.ratings || 0,
               }))

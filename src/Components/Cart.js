@@ -4,24 +4,35 @@ import {
   increaseQuantity,
   decreaseQuantity,
   removeFromCart,
+  clearCart,
 } from "../features/cart/cartSlice";
 import { IMAGE_BASE_URL } from "../Utils/constants";
+import { useNavigate } from "react-router-dom";
 import dummyImage from "../Images/noImage.jpg";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  const handleIncreaseQuantity = (itemId) => {
-    dispatch(increaseQuantity(itemId));
+  const handleIncreaseQuantity = (item) => {
+    dispatch(increaseQuantity(item));
   };
 
-  const handleDecreaseQuantity = (itemId) => {
-    dispatch(decreaseQuantity(itemId));
+  const handleDecreaseQuantity = (item) => {
+    dispatch(decreaseQuantity(item));
   };
 
   const handleRemoveFromCart = (itemId) => {
     dispatch(removeFromCart(itemId));
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+
+  const handleCheckout = () => {
+    navigate("/confirmation");
   };
 
   const getItemQuantity = (itemId) => {
@@ -102,7 +113,7 @@ const Cart = () => {
           </div>
         ))}
       </div>
-      <div className=" text-center">
+      <div className="text-center mt-8">
         <h3 className="text-gray-900 font-bold text-xl">Bill Summary:</h3>
         <ul className="text-gray-600">
           {cartItems.map((item) => (
@@ -114,9 +125,20 @@ const Cart = () => {
         <p className="text-gray-900 font-bold text-xl mt-4">
           Grand Total: ${calculateTotalPrice().toFixed(2)}
         </p>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
-          Checkout
-        </button>
+        <div className="mt-4">
+          <button
+            onClick={handleClearCart}
+            className="bg-red-500 text-white px-4 py-2 rounded mr-4"
+          >
+            Clear Cart
+          </button>
+          <button
+            onClick={handleCheckout}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Checkout
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import SignUp from "../Components/SignUp";
 import ForgotPassword from "../Components/ForgotPassword";
 import Cart from "../Components/Cart";
 import RestaurantMenu from "../Components/RestaurantMenu";
+import Checkout from "../Components/Checkout";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
   {
     path: "/restaurant/:id",
     element: <RestaurantMenu />,
+    protected: true,
+  },
+  {
+    path: "/confirmation",
+    element: <Checkout />,
     protected: true,
   },
 ];
