@@ -18,6 +18,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [newAddress, setNewAddress] = useState("");
+  const [deleteAddressId, setDeleteAddressId] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -25,13 +26,15 @@ const Checkout = () => {
       addressesRef.on("value", (snapshot) => {
         const addressesData = snapshot.val();
         if (addressesData) {
-          const addressesList = Object.values(addressesData);
+          const addressesList = Object.entries(addressesData).map(
+            ([key, value]) => ({ id: key, address: value })
+          );
           setAddresses(addressesList);
           setSelectedAddress(addressesList[0]);
         }
       });
     }
-  }, [currentUser, firebaseApp]);
+  }, [currentUser, firebaseApp, deleteAddressId]);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -42,7 +45,7 @@ const Checkout = () => {
         items: cartItems,
         totalPrice: calculateTotalPrice(),
         timestamp: new Date().toISOString(),
-        address: selectedAddress,
+        address: selectedAddress.address,
       };
 
       await orderRef.set(orderData);
@@ -92,6 +95,16 @@ const Checkout = () => {
     setShowModal(false);
   };
 
+  const handleDeleteAddress = async (addressId) => {
+    if (window.confirm("Are you sure you want to delete this address?")) {
+      const addressRef = database.ref(
+        `users/${currentUser.uid}/addresses/${addressId}`
+      );
+      await addressRef.remove();
+      setDeleteAddressId(addressId); /
+    }
+  };
+
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl font-bold mb-4">Checkout</h2>
@@ -121,23 +134,18 @@ const Checkout = () => {
                 className="flex items-center justify-between bg-gray-100 p-3 rounded cursor-pointer"
                 onClick={() => handleAddressSelect(address)}
               >
-                <span>{address}</span>
-                {selectedAddress === address && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <span>{address.address}</span>
+                <div>
+                  {selectedAddress === address && (
+                    <span className="text-green-500 mr-10">✔️</span>
+                  )}
+                  <button
+                    onClick={() => handleDeleteAddress(address.id)}
+                    className="text-red-500 "
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
