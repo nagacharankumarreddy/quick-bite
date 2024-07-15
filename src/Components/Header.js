@@ -1,18 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import logo from "../Images/quickbite.png";
 import { useFirebase } from "../firebase";
+import { clearCart } from "../features/cart/cartSlice";
 
-function Header() {
+const Header = () => {
   const { currentUser, signOutUser } = useFirebase();
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce(
     (count, item) => count + item.quantity,
     0
   );
+  const dispatch = useDispatch();
+
+  const handleSignOut = () => {
+    const x = localStorage.getItem("cart");
+    console.log(x);
+    localStorage.removeItem("cartItems");
+    dispatch(clearCart());
+    signOutUser();
+  };
 
   return (
     <div className="bg-slate-700 shadow-lg">
@@ -65,7 +75,7 @@ function Header() {
                 </li>
                 <li>
                   <button
-                    onClick={() => signOutUser()}
+                    onClick={handleSignOut}
                     className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
                   >
                     Sign Out
@@ -203,7 +213,7 @@ function Header() {
               <li>
                 <button
                   onClick={() => {
-                    signOutUser();
+                    handleSignOut();
                     document
                       .getElementById("mobile-menu")
                       .classList.add("hidden");
@@ -248,6 +258,6 @@ function Header() {
       </div>
     </div>
   );
-}
+};
 
 export default Header;
