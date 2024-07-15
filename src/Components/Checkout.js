@@ -101,7 +101,7 @@ const Checkout = () => {
         `users/${currentUser.uid}/addresses/${addressId}`
       );
       await addressRef.remove();
-      setDeleteAddressId(addressId); /
+      setDeleteAddressId(addressId);
     }
   };
 
