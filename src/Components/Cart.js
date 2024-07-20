@@ -21,6 +21,9 @@ const Cart = () => {
 
   const handleDecreaseQuantity = (item) => {
     dispatch(decreaseQuantity(item));
+    // if (getItemQuantity(item.id) == 0) {
+    //   dispatch(removeFromCart(item.id));
+    // }
   };
 
   const handleRemoveFromCart = (itemId) => {
@@ -66,7 +69,7 @@ const Cart = () => {
         {cartItems.map((item) => (
           <div
             key={item.id}
-            className="cart-item-container bg-white shadow-lg rounded-lg overflow-hidden m-2 p-4 md:w-1/2 lg:w-1/3 xl:w-1/4"
+            className="cart-item-container bg-white shadow-lg rounded-lg overflow-hidden m-2 p-4 md:w-1/2 lg:w-1/3 xl:w-1/4 flex flex-col"
           >
             <div className="relative h-40 sm:h-48 flex justify-center items-center">
               <img
@@ -80,33 +83,42 @@ const Cart = () => {
                 style={{ objectFit: "cover", borderRadius: "8px" }}
               />
             </div>
-            <div className="p-4">
-              <p className="text-gray-900 font-bold text-xl">{item.name}</p>
-              <p className="text-gray-600">Price: ${item.price}</p>
+            <div className="p-4 flex flex-col flex-grow">
+              <p className="text-gray-900 font-bold text-xl truncate">
+                {item.name}
+              </p>
+              <p className="text-gray-600">Price: ₹{item.price}</p>
               <p className="text-gray-600">Category: {item.category}</p>
-              <div className="flex items-center mt-4">
-                <button
-                  onClick={() => handleDecreaseQuantity(item)}
-                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
-                >
-                  -
-                </button>
-                <span className="px-4">{getItemQuantity(item.id)}</span>
-                <button
-                  onClick={() => handleIncreaseQuantity(item)}
-                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-r"
-                >
-                  +
-                </button>
+
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => handleDecreaseQuantity(item)}
+                    className={`bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out`}
+                    disabled={false}
+                    // disabled={getItemQuantity(item.id) === 0}
+                  >
+                    -
+                  </button>
+                  <span className="text-lg font-semibold">
+                    {getItemQuantity(item.id)}
+                  </span>
+                  <button
+                    onClick={() => handleIncreaseQuantity(item)}
+                    className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
+                  >
+                    +
+                  </button>
+                </div>
                 <button
                   onClick={() => handleRemoveFromCart(item.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded ml-4"
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition duration-150 ease-in-out"
                 >
                   Remove
                 </button>
               </div>
               <p className="text-gray-600 mt-2">
-                Total: {item.quantity} x ${item.price} = $
+                Total: {item.quantity} x ₹{item.price} = ₹
                 {getItemTotalPrice(item)}
               </p>
             </div>
@@ -118,12 +130,12 @@ const Cart = () => {
         <ul className="text-gray-600">
           {cartItems.map((item) => (
             <li key={item.id}>
-              {item.quantity} x ${item.price} = ${getItemTotalPrice(item)}
+              {item.quantity} x ₹{item.price} = ₹{getItemTotalPrice(item)}
             </li>
           ))}
         </ul>
         <p className="text-gray-900 font-bold text-xl mt-4">
-          Grand Total: ${calculateTotalPrice().toFixed(2)}
+          Grand Total: ₹{calculateTotalPrice().toFixed(2)}
         </p>
         <div className="mt-4">
           <button

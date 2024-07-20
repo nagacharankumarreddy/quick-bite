@@ -36,7 +36,7 @@ export const cartSlice = createSlice({
       const itemToUpdate = state.items.find(
         (stateItem) => item.id === stateItem.id
       );
-      if (itemToUpdate && itemToUpdate.quantity > 1) {
+      if (itemToUpdate && itemToUpdate.quantity > 0) {
         itemToUpdate.quantity--;
       }
     },

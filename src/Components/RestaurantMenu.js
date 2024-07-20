@@ -117,7 +117,7 @@ const RestaurantMenu = () => {
                 <p className="text-gray-900 font-bold text-xl break-words">
                   {item.name}
                 </p>
-                <p className="text-gray-600">Price: {item?.price || 299}</p>
+                <p className="text-gray-600">Price: ₹{item?.price || 299}</p>
                 <p className="text-gray-600">Category: {item.category}</p>
               </div>
               <div className="flex items-center justify-between mt-4">
@@ -129,7 +129,7 @@ const RestaurantMenu = () => {
                         ? "opacity-30 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={getItemQuantity() === 0}
+                    disabled={getItemQuantity(item.id) === 0}
                   >
                     -
                   </button>
