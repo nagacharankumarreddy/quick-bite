@@ -124,28 +124,34 @@ const Cart = () => {
           </div>
         ))}
       </div>
-      <div className="text-center mt-8">
-        <h3 className="text-gray-900 font-bold text-xl">Bill Summary:</h3>
-        <ul className="text-gray-600">
+      <div className="text-center mt-8 bg-white shadow-2xl rounded-lg p-6 max-w-md mx-auto">
+        <h3 className="text-gray-900 font-bold text-2xl mb-4">Bill Summary</h3>
+        <ul className="text-gray-600 mb-4">
           {cartItems.map((item) => (
-            <li key={item.id}>
-              {item.quantity} x ₹{item.price} = ₹{getItemTotalPrice(item)}
+            <li
+              key={item.id}
+              className="flex justify-between items-center mb-2"
+            >
+              <div className="flex-1 text-left">
+                {item.name} ({item.quantity} x ₹{item.price})
+              </div>
+              <div className="text-right">₹{getItemTotalPrice(item)}</div>
             </li>
           ))}
         </ul>
         <p className="text-gray-900 font-bold text-xl mt-4">
           Grand Total: ₹{calculateTotalPrice().toFixed(2)}
         </p>
-        <div className="mt-4">
+        <div className="mt-4 flex justify-center">
           <button
             onClick={handleClearCart}
-            className="bg-red-500 text-white px-4 py-2 rounded mr-4"
+            className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-red-600 transition duration-150 ease-in-out mr-4"
           >
             Clear Cart
           </button>
           <button
             onClick={handleCheckout}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 transition duration-150 ease-in-out"
           >
             Checkout
           </button>

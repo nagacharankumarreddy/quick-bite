@@ -32,7 +32,7 @@ export const restaurantApi = createApi({
                 category: item.category,
                 description: item.description || "",
                 imageId: item.imageId,
-                price: item.defaultPrice / 100,
+                price: item.defaultPrice / 100 || 299,
                 ratings: item.ratings || 0,
               }))
             : [];
