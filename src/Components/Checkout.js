@@ -260,37 +260,34 @@ const Checkout = () => {
               value={pincode}
               onChange={handlePincodeChange}
               placeholder="Enter pincode"
-              className="border border-gray-300 p-2 rounded w-full mb-2"
+              className="border p-2 mb-2 w-full"
             />
             <button
               onClick={fetchLocalitiesFromPincode}
-              className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
             >
               Fetch Localities
             </button>
-            {localities.length > 0 && (
-              <select
-                value={selectedLocality}
-                onChange={handleLocalityChange}
-                className="border border-gray-300 p-2 rounded w-full mt-2"
-              >
-                {localities.map((locality, index) => (
-                  <option key={index} value={locality}>
-                    {locality}
-                  </option>
-                ))}
-              </select>
-            )}
+            <select
+              value={selectedLocality}
+              onChange={handleLocalityChange}
+              className="border p-2 mb-2 w-full mt-2"
+            >
+              {localities.map((locality, index) => (
+                <option key={index} value={locality}>
+                  {locality}
+                </option>
+              ))}
+            </select>
             <textarea
               value={newAddress}
               onChange={(e) => setNewAddress(e.target.value)}
               placeholder="Enter full address"
-              rows="3"
-              className="border border-gray-300 p-2 rounded w-full mt-2"
-            ></textarea>
+              className="border p-2 mb-2 w-full mt-2"
+            />
             <button
               onClick={handleAddAddress}
-              className="bg-green-500 text-white px-4 py-2 rounded w-full mt-2"
+              className="bg-blue-500 text-white px-4 py-2 rounded"
             >
               Add Address
             </button>
