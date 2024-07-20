@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetRestaurantMenuQuery } from "../api/restaurantApi";
 import { IMAGE_BASE_URL } from "../Utils/constants";
@@ -16,24 +16,48 @@ const RestaurantMenu = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsWithFailedImages, setItemsWithFailedImages] = useState(new Set());
+  const [filteredItems, setFilteredItems] = useState([]);
+
   const {
     data: menuItems = [],
     error,
     isLoading,
   } = useGetRestaurantMenuQuery({ id });
 
-  const [itemsWithFailedImages, setItemsWithFailedImages] = useState(new Set());
+  useEffect(() => {
+    // Filter and shuffle menu items
+    const lowercasedSearchTerm = searchTerm.toLowerCase();
+    const filtered = menuItems.filter((item) =>
+      item.name.toLowerCase().includes(lowercasedSearchTerm)
+    );
+
+    // Separate valid and failed image items
+    const validItems = filtered.filter(
+      (item) => !itemsWithFailedImages.has(item.id)
+    );
+    const failedItems = filtered.filter((item) =>
+      itemsWithFailedImages.has(item.id)
+    );
+
+    // Shuffle valid items
+    const shuffledValidItems = validItems.sort(() => Math.random() - 0.5);
+
+    // Combine shuffled valid items with failed image items
+    setFilteredItems([...shuffledValidItems, ...failedItems]);
+  }, [menuItems, searchTerm, itemsWithFailedImages]);
 
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));
   };
 
-  const handleIncreaseQuantity = (itemId) => {
-    dispatch(increaseQuantity(itemId));
+  const handleIncreaseQuantity = (item) => {
+    dispatch(increaseQuantity(item));
   };
 
-  const handleDecreaseQuantity = (itemId) => {
-    dispatch(decreaseQuantity(itemId));
+  const handleDecreaseQuantity = (item) => {
+    dispatch(decreaseQuantity(item));
   };
 
   const getItemQuantity = (itemId) => {
@@ -45,26 +69,29 @@ const RestaurantMenu = () => {
     setItemsWithFailedImages((prev) => new Set(prev).add(itemId));
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   if (isLoading) return <Loader />;
   if (error) return <div>Error loading menu: {error.message}</div>;
 
-  const validItems = menuItems.filter(
-    (item) => !itemsWithFailedImages.has(item.id)
-  );
-  const failedItems = menuItems.filter((item) =>
-    itemsWithFailedImages.has(item.id)
-  );
-
-  const shuffledValidItems = validItems.sort(() => Math.random() - 0.5);
-
-  const sortedMenuItems = [...shuffledValidItems, ...failedItems];
-
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-4">
+      <div className="flex justify-center mb-4">
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="border rounded p-2 w-full sm:w-80"
+          style={{ maxWidth: "500px" }}
+        />
+      </div>
       <div className="flex flex-wrap justify-center">
-        {sortedMenuItems.map((item) => (
+        {filteredItems.map((item, index) => (
           <div
-            key={item.id}
+            key={`${item.id}-${index}`} // Use a combination of item ID and index to ensure uniqueness
             className="menu-item-container bg-white shadow-lg rounded-lg overflow-hidden m-2 md:w-1/2 lg:w-1/3 xl:w-1/4"
           >
             <div className="relative h-40 sm:h-48 flex justify-center items-center">
@@ -80,31 +107,38 @@ const RestaurantMenu = () => {
                 style={{ objectFit: "cover", borderRadius: "8px" }}
               />
             </div>
-            <div className="p-4">
-              <p className="text-gray-900 font-bold text-xl">{item.name}</p>
-              <p className="text-gray-600">{item.description}</p>
-              <p className="text-gray-600">Price: {item.price}</p>
+            <div className="p-4 flex flex-col justify-between h-full">
+              <p className="text-gray-900 font-bold text-xl break-words">
+                {item.name}
+              </p>
+              <p className="text-gray-600">Price: {item?.price || 299}</p>
               <p className="text-gray-600">Category: {item.category}</p>
-              <div className="flex items-center mt-4">
-                <button
-                  onClick={() => handleDecreaseQuantity(item.id)}
-                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
-                >
-                  -
-                </button>
-                <span className="px-4">{getItemQuantity(item.id)}</span>
-                <button
-                  onClick={() => handleIncreaseQuantity(item.id)}
-                  className="bg-gray-300 text-gray-700 px-2 py-1 rounded-r"
-                >
-                  +
-                </button>
-                <button
-                  onClick={() => handleAddToCart(item)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
-                >
-                  Add to Cart
-                </button>
+              <div className="flex flex-col justify-between h-full">
+                <div className="flex items-center justify-between mt-4">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => handleDecreaseQuantity(item)}
+                      className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-semibold">
+                      {getItemQuantity(item.id)}
+                    </span>
+                    <button
+                      onClick={() => handleIncreaseQuantity(item)}
+                      className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => handleAddToCart(item)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-150 ease-in-out"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             </div>
           </div>

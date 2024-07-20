@@ -74,6 +74,17 @@ const Checkout = () => {
           progress: undefined,
         }
       );
+      setTimeout(() => {
+        toast.success("Check your email for order details 📧", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }, 2000);
 
       setTimeout(() => navigate("/"), 4000);
     } catch (error) {
