@@ -17,8 +17,6 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const handleSignOut = () => {
-    const x = localStorage.getItem("cart");
-    console.log(x);
     localStorage.removeItem("cartItems");
     dispatch(clearCart());
     signOutUser();
@@ -28,7 +26,9 @@ const Header = () => {
     <div className="bg-slate-700 shadow-lg">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <img src={logo} alt="logo" className="h-12" />
+          <Link to="/">
+            <img src={logo} alt="logo" className="h-12" />
+          </Link>
         </div>
 
         <nav className="hidden md:flex">
