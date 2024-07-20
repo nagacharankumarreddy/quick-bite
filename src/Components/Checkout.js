@@ -7,11 +7,12 @@ import Modal from "./Modal";
 import { database } from "../firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import sendEmailNotification from "./sendEmailNotification";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { currentUser, firebaseApp } = useFirebase();
+  const { currentUser } = useFirebase();
   const cartItems = useSelector((state) => state.cart.items);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +35,7 @@ const Checkout = () => {
         }
       });
     }
-  }, [currentUser, firebaseApp, deleteAddressId]);
+  }, [currentUser, deleteAddressId]);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -49,6 +50,15 @@ const Checkout = () => {
       };
 
       await orderRef.set(orderData);
+
+      sendEmailNotification(
+        currentUser.email,
+        currentUser.displayName || "User",
+        // orderData.items,
+        orderData.totalPrice,
+        orderData.address,
+        orderData.timestamp
+      );
 
       dispatch(clearCart());
 
