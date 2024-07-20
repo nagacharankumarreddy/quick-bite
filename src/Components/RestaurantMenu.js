@@ -19,6 +19,7 @@ const RestaurantMenu = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsWithFailedImages, setItemsWithFailedImages] = useState(new Set());
   const [filteredItems, setFilteredItems] = useState([]);
+  const [loadingShuffledItems, setLoadingShuffledItems] = useState(true);
 
   const {
     data: menuItems = [],
@@ -27,25 +28,28 @@ const RestaurantMenu = () => {
   } = useGetRestaurantMenuQuery({ id });
 
   useEffect(() => {
-    // Filter and shuffle menu items
-    const lowercasedSearchTerm = searchTerm.toLowerCase();
-    const filtered = menuItems.filter((item) =>
-      item.name.toLowerCase().includes(lowercasedSearchTerm)
-    );
+    if (menuItems.length > 0) {
+      setLoadingShuffledItems(true);
+      const lowercasedSearchTerm = searchTerm.toLowerCase();
+      const filtered = menuItems.filter((item) =>
+        item.name.toLowerCase().includes(lowercasedSearchTerm)
+      );
 
-    // Separate valid and failed image items
-    const validItems = filtered.filter(
-      (item) => !itemsWithFailedImages.has(item.id)
-    );
-    const failedItems = filtered.filter((item) =>
-      itemsWithFailedImages.has(item.id)
-    );
+      // Separate valid and failed image items
+      const validItems = filtered.filter(
+        (item) => !itemsWithFailedImages.has(item.id)
+      );
+      const failedItems = filtered.filter((item) =>
+        itemsWithFailedImages.has(item.id)
+      );
 
-    // Shuffle valid items
-    const shuffledValidItems = validItems.sort(() => Math.random() - 0.5);
+      // Shuffle valid items
+      const shuffledValidItems = validItems.sort(() => Math.random() - 0.5);
 
-    // Combine shuffled valid items with failed image items
-    setFilteredItems([...shuffledValidItems, ...failedItems]);
+      // Combine shuffled valid items with failed image items
+      setFilteredItems([...shuffledValidItems, ...failedItems]);
+      setLoadingShuffledItems(false);
+    }
   }, [menuItems, searchTerm, itemsWithFailedImages]);
 
   const handleAddToCart = (item) => {
@@ -73,7 +77,7 @@ const RestaurantMenu = () => {
     setSearchTerm(e.target.value);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading || loadingShuffledItems) return <Loader />;
   if (error) return <div>Error loading menu: {error.message}</div>;
 
   return (
@@ -105,40 +109,46 @@ const RestaurantMenu = () => {
                 onError={() => handleImageError(item.id)}
                 className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
                 style={{ objectFit: "cover", borderRadius: "8px" }}
+                loading="lazy" // Lazy load the image
               />
             </div>
-            <div className="p-4 flex flex-col justify-between h-full">
-              <p className="text-gray-900 font-bold text-xl break-words">
-                {item.name}
-              </p>
-              <p className="text-gray-600">Price: {item?.price || 299}</p>
-              <p className="text-gray-600">Category: {item.category}</p>
-              <div className="flex flex-col justify-between h-full">
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => handleDecreaseQuantity(item)}
-                      className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-semibold">
-                      {getItemQuantity(item.id)}
-                    </span>
-                    <button
-                      onClick={() => handleIncreaseQuantity(item)}
-                      className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
-                    >
-                      +
-                    </button>
-                  </div>
+            <div className="p-4 flex-grow flex flex-col justify-between">
+              <div>
+                <p className="text-gray-900 font-bold text-xl break-words">
+                  {item.name}
+                </p>
+                <p className="text-gray-600">Price: {item?.price || 299}</p>
+                <p className="text-gray-600">Category: {item.category}</p>
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => handleAddToCart(item)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-150 ease-in-out"
+                    onClick={() => handleDecreaseQuantity(item)}
+                    className={`bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out ${
+                      getItemQuantity(item.id) === 0
+                        ? "opacity-30 cursor-not-allowed"
+                        : ""
+                    }`}
+                    disabled={getItemQuantity() === 0}
                   >
-                    Add to Cart
+                    -
+                  </button>
+                  <span className="text-lg font-semibold">
+                    {getItemQuantity(item.id)}
+                  </span>
+                  <button
+                    onClick={() => handleIncreaseQuantity(item)}
+                    className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out"
+                  >
+                    +
                   </button>
                 </div>
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-150 ease-in-out"
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           </div>
