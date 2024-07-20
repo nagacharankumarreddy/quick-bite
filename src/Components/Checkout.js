@@ -8,6 +8,10 @@ import { database } from "../firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import sendEmailNotification from "./sendEmailNotification";
+import { LoadScript } from "@react-google-maps/api";
+import { googleMapsApiKey } from "../Utils/constants";
+
+const libraries = ["places"];
 
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -20,6 +24,10 @@ const Checkout = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [newAddress, setNewAddress] = useState("");
   const [deleteAddressId, setDeleteAddressId] = useState(null);
+  const [pincode, setPincode] = useState("");
+  const [localities, setLocalities] = useState([]);
+  const [selectedLocality, setSelectedLocality] = useState("");
+  const [baseArea, setBaseArea] = useState("");
 
   useEffect(() => {
     if (currentUser) {
@@ -54,7 +62,6 @@ const Checkout = () => {
       sendEmailNotification(
         currentUser.email,
         currentUser.displayName || "User",
-        // orderData.items,
         orderData.totalPrice,
         orderData.address,
         orderData.timestamp
@@ -126,99 +133,172 @@ const Checkout = () => {
     }
   };
 
+  const handlePincodeChange = (e) => {
+    setPincode(e.target.value);
+  };
+
+  const fetchLocalitiesFromPincode = async () => {
+    if (pincode.trim() === "") {
+      toast.error("Please enter a valid pincode.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    if (!window.google || !window.google.maps || !window.google.maps.Geocoder) {
+      toast.error("Google Maps Geocoder API is not loaded.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    const geocoder = new window.google.maps.Geocoder();
+
+    geocoder.geocode({ address: pincode }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        const localities = results[0].postcode_localities || [];
+        setBaseArea(results[0].formatted_address);
+        if (localities.length > 0) {
+          setLocalities(localities);
+          setSelectedLocality(localities[0]);
+          setNewAddress(`${localities[0]}, ${results[0].formatted_address}`);
+        } else {
+          toast.error("No localities found for the given pincode.", {
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }
+      } else {
+        toast.error("Could not fetch localities for the given pincode.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    });
+  };
+
+  const handleLocalityChange = (e) => {
+    const selected = e.target.value;
+    setSelectedLocality(selected);
+    setNewAddress(`${selected}, ${baseArea}`);
+  };
+
   return (
-    <div className="container mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
-        <h3 className="text-gray-900 font-bold text-xl mb-2">Order Summary:</h3>
-        {cartItems.map((item) => (
-          <div key={item.id} className="flex items-center justify-between mb-2">
-            <span className="text-gray-900">{item.name}</span>
-            <span className="text-gray-600">
-              ${item.price} x {item.quantity}
+    <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
+      <div className="container mx-auto">
+        <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
+          <h3 className="text-gray-900 font-bold text-xl mb-2">
+            Order Summary:
+          </h3>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between mb-2"
+            >
+              <span className="text-gray-900">{item.name}</span>
+              <span className="text-gray-600">
+                ₹{item.price} x {item.quantity}
+              </span>
+            </div>
+          ))}
+          <hr className="my-2" />
+          <div className="flex justify-between items-center">
+            <span className="text-gray-900 font-bold">Total:</span>
+            <span className="text-gray-900 font-bold">
+              ₹{calculateTotalPrice().toFixed(2)}
             </span>
           </div>
-        ))}
-        <hr className="my-2" />
-        <div className="flex justify-between items-center">
-          <span className="text-gray-900 font-bold">Total:</span>
-          <span className="text-gray-900 font-bold">
-            ${calculateTotalPrice().toFixed(2)}
-          </span>
-        </div>
-        <div className="mt-4">
-          <h3 className="text-gray-900 font-bold mb-2">Select Address:</h3>
-          <div className="space-y-2">
-            {addresses.map((address, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-gray-100 p-3 rounded cursor-pointer"
-                onClick={() => handleAddressSelect(address)}
-              >
-                <span>{address.address}</span>
-                <div>
-                  {selectedAddress === address && (
-                    <span className="text-green-500 mr-10">✔️</span>
-                  )}
-                  <button
-                    onClick={() => handleDeleteAddress(address.id)}
-                    className="text-red-500 "
-                  >
-                    Delete
-                  </button>
+          <div className="mt-4">
+            <h3 className="text-gray-900 font-bold mb-2">Select Address:</h3>
+            <div className="space-y-2">
+              {addresses.map((address, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-gray-100 p-3 rounded cursor-pointer"
+                  onClick={() => handleAddressSelect(address)}
+                >
+                  <span>{address.address}</span>
+                  <div>
+                    {selectedAddress === address && (
+                      <span className="text-green-500 mr-10">✔️</span>
+                    )}
+                    <button
+                      onClick={() => handleDeleteAddress(address.id)}
+                      className="text-red-500"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-        <button
-          onClick={handleCheckout}
-          className={`bg-blue-500 text-white px-4 py-2 rounded mt-4 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Processing..." : "Place Order"}
-        </button>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-gray-200 text-gray-700 px-4 py-2 rounded mt-2"
-        >
-          Add New Address
-        </button>
-      </div>
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <div className="p-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            New Address:
-          </label>
-          <input
-            type="text"
-            className="border border-gray-300 rounded px-3 py-2 w-full mb-2"
-            value={newAddress}
-            onChange={(e) => setNewAddress(e.target.value)}
-            placeholder="Enter new address"
-          />
           <button
-            onClick={handleAddAddress}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+            onClick={handleCheckout}
+            className={`bg-blue-500 text-white px-4 py-2 rounded mt-4 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Add Address
+            {loading ? "Processing..." : "Place Order"}
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded mt-2"
+          >
+            Add New Address
           </button>
         </div>
-      </Modal>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </div>
+        <Modal show={showModal} onClose={() => setShowModal(false)}>
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-2">Add New Address</h3>
+            <input
+              type="text"
+              value={pincode}
+              onChange={handlePincodeChange}
+              placeholder="Enter pincode"
+              className="border border-gray-300 p-2 rounded w-full mb-2"
+            />
+            <button
+              onClick={fetchLocalitiesFromPincode}
+              className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+            >
+              Fetch Localities
+            </button>
+            {localities.length > 0 && (
+              <select
+                value={selectedLocality}
+                onChange={handleLocalityChange}
+                className="border border-gray-300 p-2 rounded w-full mt-2"
+              >
+                {localities.map((locality, index) => (
+                  <option key={index} value={locality}>
+                    {locality}
+                  </option>
+                ))}
+              </select>
+            )}
+            <textarea
+              value={newAddress}
+              onChange={(e) => setNewAddress(e.target.value)}
+              placeholder="Enter full address"
+              rows="3"
+              className="border border-gray-300 p-2 rounded w-full mt-2"
+            ></textarea>
+            <button
+              onClick={handleAddAddress}
+              className="bg-green-500 text-white px-4 py-2 rounded w-full mt-2"
+            >
+              Add Address
+            </button>
+          </div>
+        </Modal>
+        <ToastContainer />
+      </div>
+    </LoadScript>
   );
 };
 

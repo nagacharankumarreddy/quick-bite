@@ -1,33 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Modal = ({ show, onClose, children }) => {
   if (!show) return null;
 
   return ReactDOM.createPortal(
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg overflow-hidden max-w-md w-full relative">
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="relative bg-white p-6 rounded shadow-lg w-full max-w-md">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-full hover:bg-blue-600 focus:outline-none"
+          className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 focus:outline-none"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M13.414 6.586a2 2 0 00-2.828 0L10 7.172 8.414 5.586a2 2 0 10-2.828 2.828L7.172 10l-1.586 1.586a2 2 0 102.828 2.828L10 12.828l1.586 1.586a2 2 0 102.828-2.828L12.828 10l1.586-1.586a2 2 0 000-2.828z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <AiOutlineClose className="h-6 w-6" />
         </button>
-        <div className="p-4">{children}</div>
+        {children}
       </div>
     </div>,
-    document.getElementById("modal-root") // Ensure modal-root exists in your index.html
+    document.body
   );
 };
 
