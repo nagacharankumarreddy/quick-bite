@@ -21,9 +21,9 @@ const Cart = () => {
 
   const handleDecreaseQuantity = (item) => {
     dispatch(decreaseQuantity(item));
-    // if (getItemQuantity(item.id) == 0) {
-    //   dispatch(removeFromCart(item.id));
-    // }
+    if (getItemQuantity(item.id) === 1) {
+      handleRemoveFromCart(item.id);
+    }
   };
 
   const handleRemoveFromCart = (itemId) => {
@@ -95,8 +95,7 @@ const Cart = () => {
                   <button
                     onClick={() => handleDecreaseQuantity(item)}
                     className={`bg-gray-300 text-gray-700 px-3 py-1 rounded-lg shadow-sm hover:bg-gray-400 transition duration-150 ease-in-out`}
-                    disabled={false}
-                    // disabled={getItemQuantity(item.id) === 0}
+                    disabled={getItemQuantity(item.id) === 0}
                   >
                     -
                   </button>
