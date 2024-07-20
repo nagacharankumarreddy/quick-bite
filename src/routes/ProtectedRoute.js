@@ -1,11 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useFirebase } from "../firebase";
+import Loader from "../Utils/Loader";
 
 const ProtectedRoute = ({ children }) => {
-  const { currentUser } = useFirebase();
+  const { currentUser, loading } = useFirebase();
 
-  //will enable this later development
+  if (loading) {
+    return <Loader />;
+  }
+
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }

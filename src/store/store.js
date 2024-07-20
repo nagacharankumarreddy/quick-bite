@@ -5,7 +5,12 @@ import cartReducer from "../features/cart/cartSlice";
 const persistMiddleware = (store) => (next) => (action) => {
   const result = next(action);
   const state = store.getState();
-  localStorage.setItem("reduxState", JSON.stringify(state));
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem("reduxState", serializedState);
+  } catch (e) {
+    console.error("Could not save state", e);
+  }
   return result;
 };
 

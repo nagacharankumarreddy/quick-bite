@@ -1,3 +1,5 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -9,8 +11,6 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const FirebaseContext = createContext(null);
@@ -32,12 +32,14 @@ export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setCurrentUser(user);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -57,6 +59,7 @@ export const FirebaseProvider = (props) => {
       throw new Error("Error signing in user: " + error.message);
     }
   };
+
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(firebaseAuth, googleProvider);
@@ -71,6 +74,7 @@ export const FirebaseProvider = (props) => {
   const signOutUser = async () => {
     return firebaseAuth.signOut();
   };
+
   const sendPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(firebaseAuth, email);
@@ -78,8 +82,10 @@ export const FirebaseProvider = (props) => {
       throw new Error("Error sending password reset email: " + error.message);
     }
   };
+
   const logOut = async () => {
     try {
+      localStorage.removeItem("reduxState");
       await firebaseAuth.signOut();
       navigate("/login");
     } catch (error) {
@@ -89,7 +95,6 @@ export const FirebaseProvider = (props) => {
 
   const getData = async (url) => {
     try {
-      // Access and log  restaurants
       const snapshot = await get(ref(db, `${url}`));
       if (snapshot.exists()) {
         return snapshot.val();
@@ -116,6 +121,7 @@ export const FirebaseProvider = (props) => {
         signInWithGoogle,
         signOutUser,
         getData,
+        loading,
       }}
     >
       {props.children}
