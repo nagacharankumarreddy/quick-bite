@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetRestaurantMenuQuery } from "../api/restaurantApi";
 import { IMAGE_BASE_URL } from "../Utils/constants";
@@ -17,10 +17,12 @@ const RestaurantMenu = () => {
   const cartItems = useSelector((state) => state.cart.items);
 
   const {
-    data: menuItems = { itemCards: [] },
+    data: menuItems = [],
     error,
     isLoading,
   } = useGetRestaurantMenuQuery({ id });
+
+  const [itemsWithFailedImages, setItemsWithFailedImages] = useState(new Set());
 
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));
@@ -39,24 +41,41 @@ const RestaurantMenu = () => {
     return cartItem ? cartItem.quantity : 0;
   };
 
+  const handleImageError = (itemId) => {
+    setItemsWithFailedImages((prev) => new Set(prev).add(itemId));
+  };
+
   if (isLoading) return <Loader />;
   if (error) return <div>Error loading menu: {error.message}</div>;
+
+  const validItems = menuItems.filter(
+    (item) => !itemsWithFailedImages.has(item.id)
+  );
+  const failedItems = menuItems.filter((item) =>
+    itemsWithFailedImages.has(item.id)
+  );
+
+  const shuffledValidItems = validItems.sort(() => Math.random() - 0.5);
+
+  const sortedMenuItems = [...shuffledValidItems, ...failedItems];
 
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap justify-center">
-        {menuItems.map((item, index) => (
+        {sortedMenuItems.map((item) => (
           <div
-            key={index}
+            key={item.id}
             className="menu-item-container bg-white shadow-lg rounded-lg overflow-hidden m-2 md:w-1/2 lg:w-1/3 xl:w-1/4"
           >
             <div className="relative h-40 sm:h-48 flex justify-center items-center">
               <img
-                src={`${IMAGE_BASE_URL}/${item.imageId}`}
+                src={
+                  itemsWithFailedImages.has(item.id)
+                    ? dummyImage
+                    : `${IMAGE_BASE_URL}/${item.imageId}`
+                }
                 alt={item.name}
-                onError={(e) => {
-                  e.target.src = dummyImage;
-                }}
+                onError={() => handleImageError(item.id)}
                 className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
                 style={{ objectFit: "cover", borderRadius: "8px" }}
               />
@@ -68,14 +87,14 @@ const RestaurantMenu = () => {
               <p className="text-gray-600">Category: {item.category}</p>
               <div className="flex items-center mt-4">
                 <button
-                  onClick={() => handleDecreaseQuantity(item)}
+                  onClick={() => handleDecreaseQuantity(item.id)}
                   className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
                 >
                   -
                 </button>
                 <span className="px-4">{getItemQuantity(item.id)}</span>
                 <button
-                  onClick={() => handleIncreaseQuantity(item)}
+                  onClick={() => handleIncreaseQuantity(item.id)}
                   className="bg-gray-300 text-gray-700 px-2 py-1 rounded-r"
                 >
                   +
