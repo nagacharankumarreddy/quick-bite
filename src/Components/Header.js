@@ -21,7 +21,6 @@ const Header = () => {
     dispatch(clearCart());
     signOutUser();
   };
-
   return (
     <div className="bg-slate-700 shadow-lg">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -67,11 +66,11 @@ const Header = () => {
                       className="h-10 rounded-full"
                     />
                   )}
-                  <span className="text-white">{`${
-                    currentUser.displayName.split(" ")[0] +
-                    " " +
-                    currentUser.displayName.split(" ")[1]
-                  }`}</span>
+                  <span className="text-white">
+                    {currentUser?.displayName ||
+                      `Hey 
+                      ${currentUser?.email.split("@")[0].toUpperCase()}`}
+                  </span>
                 </li>
                 <li>
                   <button
@@ -120,8 +119,9 @@ const Header = () => {
 
         <div className="md:hidden flex items-center">
           {currentUser && (
-            <span className="text-white text-sm mr-4">{`Hello, ${
-              currentUser.displayName.split(" ")[0]
+            <span className="text-white text-sm mr-4">{`Hey, ${
+              currentUser?.displayName ||
+              currentUser?.email.split("@")[0].toUpperCase()
             }!`}</span>
           )}
           <Link
@@ -204,11 +204,11 @@ const Header = () => {
                     className="h-10 rounded-full"
                   />
                 )}
-                <span className="text-white">{`${
-                  currentUser.displayName.split(" ")[0] +
-                  " " +
-                  currentUser.displayName.split(" ")[1]
-                }`}</span>
+                <span className="text-white">
+                  {currentUser?.displayName ||
+                    `Hey 
+                      ${currentUser?.email.split("@")[0].toUpperCase()}`}
+                </span>
               </li>
               <li>
                 <button

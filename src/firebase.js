@@ -47,6 +47,7 @@ export const FirebaseProvider = (props) => {
   const signUpUserWithEmailAndPassword = async (email, password) => {
     try {
       await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      navigate("/login");
     } catch (error) {
       throw new Error("Error signing up user: " + error.message);
     }
