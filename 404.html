@@ -2,31 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>404 Page Not Found</title>
+    <title>404 - Page Not Found</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
   </head>
-  <body class="bg-gray-100 flex items-center justify-center min-h-screen m-0">
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="text-center">
-      <h1 class="text-6xl font-bold text-red-600">404</h1>
-      <p class="text-xl text-gray-700 mt-4">Page Not Found</p>
-      <p class="text-lg text-gray-500 mt-2">
-        You will be redirected to the home page shortly.
+      <h1 class="text-6xl font-bold text-red-500">404</h1>
+      <p class="text-lg text-gray-700 mt-4">
+        Oops! The page you're looking for doesn't exist.
       </p>
       <a
         href="/"
-        class="inline-block mt-6 text-lg text-blue-600 border border-blue-600 py-2 px-4 rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300"
-        >Go to Home</a
+        class="mt-6 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >Go Home</a
       >
     </div>
-
     <script>
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = "/quick-bite";
       }, 3000);
     </script>
   </body>
