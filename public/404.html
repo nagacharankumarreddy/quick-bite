@@ -5,37 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 Page Not Found</title>
-    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div>
-      <h1>404 - Page Not Found</h1>
-      <p>The page you are looking for does not exist.</p>
-
-      <script>
-        // Initialize Firebase app using your existing Firebase configuration
-        const firebaseApp = firebase.initializeApp({
-          apiKey: "AIzaSyD_V2Roidf3ZOwOtCObp6AODT8praMY-wQ",
-          authDomain: "quick-bite-a926c.firebaseapp.com",
-          projectId: "quick-bite-a926c",
-          storageBucket: "quick-bite-a926c.appspot.com",
-          messagingSenderId: "508976986685",
-          appId: "1:508976986685:web:78f253540e3e4f63e60854",
-          measurementId: "G-KWDF0115CW",
-        });
-        const firebaseAuth = firebaseApp.auth();
-
-        firebaseAuth.onAuthStateChanged((user) => {
-          if (user) {
-            console.log("User is logged in:", user);
-            window.location.href = "/home";
-          } else {
-            console.log("User is not logged in.");
-            window.location.href = "/login";
-          }
-        });
-      </script>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen m-0">
+    <div class="text-center">
+      <h1 class="text-6xl font-bold text-red-600">404</h1>
+      <p class="text-xl text-gray-700 mt-4">Page Not Found</p>
+      <p class="text-lg text-gray-500 mt-2">
+        You will be redirected to the home page shortly.
+      </p>
+      <a
+        href="/"
+        class="inline-block mt-6 text-lg text-blue-600 border border-blue-600 py-2 px-4 rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300"
+        >Go to Home</a
+      >
     </div>
+
+    <script>
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
+    </script>
   </body>
 </html>
