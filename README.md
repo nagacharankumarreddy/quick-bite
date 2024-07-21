@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# Quick Bite 🍔🍕🍜
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to Quick Bite, where we believe in "Bite taste love".Our mission is to make online food ordering easy and enjoyable. Whether you crave a hearty meal, a light snack, or something sweet, we have it all.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### 1. User Authentication 🔒
 
-### `npm start`
+- **Firebase Authentication**: Secure sign-in and sign-up processes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. Restaurant and Menu Browsing 🍽️
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Restaurant List**: Users can browse through a list of partnered restaurants.
+- **Menu Display**: Each restaurant's menu is displayed with options to add items to the cart.
 
-### `npm test`
+### 3. Cart Management 🛒
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Add to Cart**: Users can add multiple items from different restaurants to their cart.
+- **Edit Cart**: Users can update item quantities or remove items from their cart.
 
-### `npm run build`
+### 4. Checkout Process 🏁
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Order Summary**: Displays the items in the cart along with their quantities and total price.
+- **Place Order**: Users can place an order, which is then confirmed via email.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 5. Address Management 🏠
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Add New Address**: Users can add new addresses for delivery.
+- **Select Address**: Users can select from their saved addresses during checkout.
+- **Delete Address**: Users can delete unwanted addresses.
 
-### `npm run eject`
+### 6. Integration with Google Maps 🗺️
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Pincode Lookup**: Users can enter a pincode to fetch localities using the Google Maps Geocoding API.
+- **Address Autocomplete**: Helps users quickly fill out their address details.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 7. Email Notifications 📧
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Order Confirmation**: Sends a detailed order confirmation email to the user upon successful order placement.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## How to Run 🚀
 
-## Learn More
+1. **Clone the Repository 📋**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```bash
+   git clone https://github.com/yourusername/quick-bite.git
+   cd quick-bite
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   ```
 
-### Code Splitting
+2. **Install Dependencies 📦**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   ```bash
+   npm install
 
-### Analyzing the Bundle Size
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. **Set Up Firebase🔥**
 
-### Making a Progressive Web App
+   Create a Firebase project at Firebase Console.
+   Set up authentication and realtime database.
+   Update the Firebase configuration in firebase.js.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. **Set Up Google Maps API 🌐**
 
-### Advanced Configuration
+   Obtain a Google Maps API key from the Google Cloud Console.
+   Update the API key in src/Utils/constants.js.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5. **Set Up Email Notifications ✉️**
 
-### Deployment
+   Use EMailJs as email service provider
+   Create an email template for order confirmations.
+   Update the email configuration in src/utils/sendEmailNotification.js with your email service provider's details.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+6. **Start the Application ▶️**
 
-### `npm run build` fails to minify
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Feel free to contribute to the project by creating a pull request or reporting issues. Enjoy using Quick Bite and have a great meal! 🍽️
