@@ -43,7 +43,7 @@ Welcome to Quick Bite, where we believe in "Bite taste love".Our mission is to m
 1. **Clone the Repository 📋**
 
    ```bash
-   git clone https://github.com/yourusername/quick-bite.git
+   git clone https://github.com/nagacharankumarreddy/quick-bite
    cd quick-bite
 
    ```
