@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import logo from "../Images/quickbite.png";
 import { clearCart } from "../features/cart/cartSlice";
 import { useFirebase } from "../firebase";
+import logo from "../Images/quickbite.png";
+import { prepareDisplayName } from "../Utils/utils";
 
 const Header = () => {
   const { currentUser, signOutUser } = useFirebase();
@@ -58,14 +59,29 @@ const Header = () => {
               </Link>
             </li>
             {currentUser && (
-              <li>
-                <button
-                  onClick={handleSignOut}
-                  className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
-                >
-                  Sign Out
-                </button>
-              </li>
+              <>
+                <li className="flex items-center space-x-2">
+                  {currentUser.photoURL && (
+                    <img
+                      src={currentUser.photoURL}
+                      alt="Profile"
+                      className="h-10 rounded-full"
+                    />
+                  )}
+                  <span className="text-white">
+                    {`Hey 
+                  ${prepareDisplayName(currentUser?.displayName)}`}
+                  </span>
+                </li>
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              </>
             )}
             <li>
               <Link
@@ -105,10 +121,8 @@ const Header = () => {
 
         <div className="md:hidden flex items-center">
           {currentUser && (
-            <span className="text-white text-sm mr-4">{`Hey, ${
-              currentUser?.displayName ||
-              currentUser?.email.split("@")[0].toUpperCase()
-            }!`}</span>
+            <span className="text-white text-sm mr-4">{`Hey 
+              ${prepareDisplayName(currentUser?.displayName)}`}</span>
           )}
           <Link
             to="/cart"
@@ -181,19 +195,15 @@ const Header = () => {
             </Link>
           </li>
           {currentUser && (
-            <li>
-              <button
-                onClick={() => {
-                  handleSignOut();
-                  document
-                    .getElementById("mobile-menu")
-                    .classList.add("hidden");
-                }}
-                className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
-              >
-                Sign Out
-              </button>
-            </li>
+            <button
+              onClick={() => {
+                handleSignOut();
+                document.getElementById("mobile-menu").classList.add("hidden");
+              }}
+              className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+            >
+              Sign Out
+            </button>
           )}
           {!currentUser && (
             <>

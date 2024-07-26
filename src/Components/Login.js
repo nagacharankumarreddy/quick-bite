@@ -20,6 +20,7 @@ const Login = () => {
         localStorage.removeItem("redirectPath");
         navigate(redirectPath, { replace: true });
       }
+      navigate("/", { replace: true });
     } catch (error) {
       toast.error("Error logging in user: " + error.message);
     }
