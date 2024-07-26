@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { clearCart } from "../features/cart/cartSlice";
-import { useFirebase } from "../firebase";
+import { LoadScript } from "@react-google-maps/api";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Modal from "./Modal";
-import { database } from "../firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import sendEmailNotification from "./sendEmailNotification";
-import { LoadScript } from "@react-google-maps/api";
+import { clearCart } from "../features/cart/cartSlice";
+import { useFirebase } from "../firebase";
+import { database } from "../firebase/firebase";
 import { googleMapsApiKey } from "../Utils/constants";
+import Modal from "./Modal";
+import sendEmailNotification from "./sendEmailNotification";
 
 const libraries = ["places"];
 
@@ -171,7 +171,7 @@ const Checkout = () => {
           });
         }
       } else {
-        toast.error("Could not fetch localities for the given pincode.", {
+        toast.error("Given pincode doesn't exist", {
           position: "top-right",
           autoClose: 3000,
         });

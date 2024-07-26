@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebase } from "../firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useFirebase } from "../firebase";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,11 @@ const Login = () => {
     try {
       await signInUserWithEmailAndPassword(email, password);
       toast.success("User logged in successfully");
-      setTimeout(() => navigate("/"), 800);
+      const redirectPath = localStorage.getItem("redirectPath");
+      if (redirectPath) {
+        localStorage.removeItem("redirectPath");
+        navigate(redirectPath, { replace: true });
+      }
     } catch (error) {
       toast.error("Error logging in user: " + error.message);
     }
@@ -78,7 +82,10 @@ const Login = () => {
         </div>
         <div className="flex items-center justify-between mb-4">
           <button
-            onClick={signInWithGoogle}
+            onClick={(e) => {
+              e.preventDefault();
+              signInWithGoogle();
+            }}
             className="w-full bg-red-500 text-white py-2 rounded-md"
           >
             LogIn with Google

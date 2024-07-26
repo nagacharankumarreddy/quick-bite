@@ -1,16 +1,16 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  onAuthStateChanged,
-  signInWithPopup,
+  getAuth,
   GoogleAuthProvider,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const FirebaseContext = createContext(null);
@@ -66,7 +66,13 @@ export const FirebaseProvider = (props) => {
       const result = await signInWithPopup(firebaseAuth, googleProvider);
       const user = result.user;
       toast.success("Google Sign In Success:", user);
-      navigate("./");
+      const redirectPath = localStorage.getItem("redirectPath");
+      if (redirectPath) {
+        localStorage.removeItem("redirectPath");
+        navigate(redirectPath, { replace: true });
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Google Sign In Error:", error);
     }

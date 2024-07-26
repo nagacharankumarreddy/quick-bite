@@ -1,11 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import logo from "../Images/quickbite.png";
-import { useFirebase } from "../firebase";
 import { clearCart } from "../features/cart/cartSlice";
+import { useFirebase } from "../firebase";
 
 const Header = () => {
   const { currentUser, signOutUser } = useFirebase();
@@ -21,6 +21,7 @@ const Header = () => {
     dispatch(clearCart());
     signOutUser();
   };
+
   return (
     <div className="bg-slate-700 shadow-lg">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -56,45 +57,30 @@ const Header = () => {
                 Contact Us
               </Link>
             </li>
-            {currentUser ? (
-              <>
-                <li className="flex items-center space-x-2">
-                  {currentUser.photoURL && (
-                    <img
-                      src={currentUser.photoURL}
-                      alt="Profile"
-                      className="h-10 rounded-full"
-                    />
-                  )}
-                  <span className="text-white">
-                    {currentUser?.displayName ||
-                      `Hey 
-                      ${currentUser?.email.split("@")[0].toUpperCase()}`}
+            {currentUser && (
+              <li>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+                >
+                  Sign Out
+                </button>
+              </li>
+            )}
+            <li>
+              <Link
+                to="/cart"
+                className="relative text-white hover:text-yellow-400 transition-colors duration-200"
+              >
+                <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-1 py-0.5 rounded-full">
+                    {cartItemCount}
                   </span>
-                </li>
-                <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
-                  >
-                    Sign Out
-                  </button>
-                </li>
-                <li>
-                  <Link
-                    to="/cart"
-                    className="relative text-white hover:text-yellow-400 transition-colors duration-200"
-                  >
-                    <FontAwesomeIcon icon={faShoppingCart} size="lg" />
-                    {cartItemCount > 0 && (
-                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-1 py-0.5 rounded-full">
-                        {cartItemCount}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              </>
-            ) : (
+                )}
+              </Link>
+            </li>
+            {!currentUser && (
               <>
                 <li>
                   <Link
@@ -194,37 +180,22 @@ const Header = () => {
               Contact Us
             </Link>
           </li>
-          {currentUser ? (
-            <>
-              <li className="flex items-center space-x-2">
-                {currentUser.photoURL && (
-                  <img
-                    src={currentUser.photoURL}
-                    alt="Profile"
-                    className="h-10 rounded-full"
-                  />
-                )}
-                <span className="text-white">
-                  {currentUser?.displayName ||
-                    `Hey 
-                      ${currentUser?.email.split("@")[0].toUpperCase()}`}
-                </span>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    handleSignOut();
-                    document
-                      .getElementById("mobile-menu")
-                      .classList.add("hidden");
-                  }}
-                  className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
-                >
-                  Sign Out
-                </button>
-              </li>
-            </>
-          ) : (
+          {currentUser && (
+            <li>
+              <button
+                onClick={() => {
+                  handleSignOut();
+                  document
+                    .getElementById("mobile-menu")
+                    .classList.add("hidden");
+                }}
+                className="text-sm text-white hover:text-yellow-400 transition-colors duration-200"
+              >
+                Sign Out
+              </button>
+            </li>
+          )}
+          {!currentUser && (
             <>
               <li>
                 <Link
